@@ -73,8 +73,13 @@ the contents of c
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo: Course.FileIO#main"
+
+main = do args <- getArgs
+          case args of
+            Nil    -> putStrLn "Please provide a file path"
+            h :. _ -> run h
+
+-- main = getArgs >>= (\(a:._) -> run a)
 
 type FilePath =
   Chars
@@ -83,31 +88,40 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo: Course.FileIO#run"
+run fp =
+  do
+    c     <- readFile fp
+    files <- getFiles (lines c)
+    printFiles files
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo: Course.FileIO#getFiles"
+getFiles list = sequence (map getFile list)
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo: Course.FileIO#getFile"
+getFile fp =
+  do
+    c <- readFile fp
+    pure (fp, c)
+
+  -- getFile = lift2 (<$>) (,) readFile
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo: Course.FileIO#printFiles"
+
+printFiles = void . sequence . (<$>) (uncurry printFile)
+--printFiles = foldRight (\(fp, c) -> (*>) (printFile fp c)) (pure ())
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo: Course.FileIO#printFile"
+printFile fp c =
+  do
+    putStrLn ("============ " ++ fp)
+    putStrLn c
 

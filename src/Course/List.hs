@@ -319,7 +319,7 @@ produce f x = x :. produce f (f x)
 notReverse ::
   List a
   -> List a
-notReverse = Nil
+notReverse = undefined
 
 ---- End of list exercises
 
